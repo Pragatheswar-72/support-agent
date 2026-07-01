@@ -9,6 +9,21 @@ routes each request to a specialist agent (orders, refunds, payments, FAQ) that
 calls real backend tools to resolve it — with guardrails, error handling, and
 automatic human-escalation on failure.
 
+## Screenshots
+
+| Order lookup | Guardrail refusal |
+|:---:|:---:|
+| ![Order lookup](demo/01_order_lookup.png) | ![Guardrail refusal](demo/02_guardrail_refusal.png) |
+
+| Guardrail enforced at the tool level | FAQ answer + session stats |
+|:---:|:---:|
+| ![Trace showing eligibility check](demo/02b_guardrail_trace_expanded.png) | ![FAQ and sidebar](demo/03_faq_and_sidebar.png) |
+
+The right-hand pair shows the actual mechanism: `check_refund_eligibility`
+returns `"eligible": false` for a shipped (not delivered) order, so
+`initiate_refund` never even attempts the refund — the rule is enforced in
+the tool's code, not just requested in a prompt.
+
 ## What it does
 
 - Understands natural-language support requests
