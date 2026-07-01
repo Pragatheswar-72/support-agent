@@ -52,7 +52,15 @@ def run_tool_agent(
     messages.append(ai_msg)
 
     rounds = 0
+    seen_calls: set[tuple] = set()
     while ai_msg.tool_calls and rounds < max_rounds:
+        call_signature = tuple(sorted((c["name"], str(c["args"])) for c in ai_msg.tool_calls))
+        if call_signature in seen_calls:
+            # Model is repeating the same tool call instead of answering - stop
+            # spending rounds/quota on it; the fallback below covers the reply.
+            break
+        seen_calls.add(call_signature)
+
         for call in ai_msg.tool_calls:
             tool_fn = tools_by_name[call["name"]]
             result = tool_fn.invoke(call["args"])
@@ -63,8 +71,17 @@ def run_tool_agent(
         messages.append(ai_msg)
         rounds += 1
 
+    reply = as_text(ai_msg.content).strip()
+    if not reply and trace:
+        # Some models occasionally exhaust tool-call rounds without ever
+        # emitting closing text (seen with Groq/Llama under long conversation
+        # history) - fall back to the last tool result rather than show
+        # the customer a blank reply.
+        last_result = trace[-1]["result"]
+        reply = last_result if isinstance(last_result, str) else str(last_result)
+
     return {
-        "reply": as_text(ai_msg.content),
+        "reply": reply,
         "trace": trace,
         "messages": messages,
         "agent": agent_name,
