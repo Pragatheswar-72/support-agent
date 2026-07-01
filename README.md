@@ -12,6 +12,8 @@ automatic human-escalation on failure.
 ## Live demo
 
 **▶️ Live app:** https://support-agent-htg6lfc8qdjeez9bhx8b9o.streamlit.app/
+(free-tier hosting — if it shows "app went to sleep," click "Yes, get this app
+back up," it wakes in under a minute)
 
 ## Screenshots
 
