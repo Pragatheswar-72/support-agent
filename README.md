@@ -9,6 +9,10 @@ routes each request to a specialist agent (orders, refunds, payments, FAQ) that
 calls real backend tools to resolve it — with guardrails, error handling, and
 automatic human-escalation on failure.
 
+## Live demo
+
+**▶️ Live app:** https://support-agent-htg6lfc8qdjeez9bhx8b9o.streamlit.app/
+
 ## Screenshots
 
 | Order lookup | Guardrail refusal |
