@@ -1,0 +1,10 @@
+streamlit
+langgraph
+langchain
+langchain-google-genai
+google-generativeai
+langchain-groq
+sqlalchemy
+python-dotenv
+pydantic
+pytest
