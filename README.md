@@ -1,5 +1,9 @@
 # AI Customer Support Agent (Multi-Agent)
 
+![CI](https://github.com/Pragatheswar-72/support-agent/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
 A multi-agent customer-support system for an e-commerce store. An orchestrator
 routes each request to a specialist agent (orders, refunds, payments, FAQ) that
 calls real backend tools to resolve it — with guardrails, error handling, and
