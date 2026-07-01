@@ -150,9 +150,9 @@ docker run -p 8501:8501 -e GEMINI_API_KEY=your_key support-agent
    GROQ_API_KEY = "your_key_here"   # optional fallback
    ```
    Never commit the real key — `.env` is git-ignored.
-4. Add a startup command (or a small script) that runs
-   `python -m src.backend.seed` once before `streamlit run app.py`, since the
-   SQLite file isn't committed to the repo.
+4. That's it — the SQLite file isn't committed to the repo, but `src/tools.py`
+   auto-seeds the database on first import if it's empty, so a fresh
+   deployment works with no extra startup step.
 
 ## Cost
 

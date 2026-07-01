@@ -6,12 +6,25 @@ import logging
 import uuid
 
 from src.backend.db import Order, Payment, Refund, get_engine, get_session_factory, init_db
+from src.backend.seed import seed as _seed_data
 
 logger = logging.getLogger("support_agent.tools")
 
 _engine = get_engine()
 init_db(_engine)
 _SessionLocal = get_session_factory(_engine)
+
+
+def _ensure_seeded() -> None:
+    """Deployed environments (e.g. Streamlit Cloud) only ever run app.py, with
+    no separate seed step - so seed on first import if the DB is empty."""
+    with _SessionLocal() as s:
+        if s.query(Order).count() == 0:
+            _seed_data(s)
+            logger.info("Auto-seeded empty database on startup.")
+
+
+_ensure_seeded()
 
 
 def configure_db(engine) -> None:
