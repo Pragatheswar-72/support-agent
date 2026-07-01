@@ -7,3 +7,4 @@ __pycache__/
 .streamlit/secrets.toml
 demo/*.mp4
 .claude/
+RESUME_BULLETS.md
