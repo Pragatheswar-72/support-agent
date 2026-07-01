@@ -123,7 +123,7 @@ curl -X POST http://localhost:8000/chat \
 Every request is logged as structured JSON (method, path, status, latency).
 The Streamlit UI and the API both call the same `src/orchestrator.py`, so the
 agent logic is written once and consumed by either a human (UI) or a machine
-(API) — exactly like the Resume Analyser project.
+(API).
 
 ## Tests
 
@@ -131,11 +131,13 @@ agent logic is written once and consumed by either a human (UI) or a machine
 pytest
 ```
 
-35 tests covering: every tool against a seeded in-memory database (including
+38 tests covering: every tool against a seeded in-memory database (including
 the refund-eligibility guardrail), orchestrator routing for all five paths
 (mocked LLM, no API key needed), conversation memory, retry/escalation
-behavior on a forced failure, and the FastAPI endpoints (session handling,
-validation, mocked orchestrator).
+behavior on a forced failure, the FastAPI endpoints (session handling,
+validation, mocked orchestrator), and a regression test for a real bug found
+during manual testing (a model looping on a tool call without ever
+answering — see the commit history for the fix).
 
 ## Evaluation
 
