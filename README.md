@@ -19,18 +19,21 @@ automatic human-escalation on failure.
 - Handles errors with a retry, then escalates to a human with a ticket ID
 - Shows a live agent trace: which agent handled the request and which tools it called
 - Tracks token usage per session and caches repeated FAQ answers to save quota
+- Exposes the same orchestrator over a **FastAPI** REST endpoint, not just the chat UI
+- Ships with a **routing evaluation harness** that measures LLM classification accuracy on a curated dataset, separate from unit tests
 
 ## Tech
 
 LangGraph multi-agent orchestration · Gemini tool-calling (with Groq fallback)
-· SQLite backend (SQLAlchemy) · Streamlit · pytest
+· SQLite backend (SQLAlchemy) · Streamlit · FastAPI · pytest
 
 ## Architecture
 
 ```
-                          USER (chat)
-                             |
-                             v
+              Streamlit UI (app.py)   FastAPI (api.py)
+                        |                   |
+                        +--------+----------+
+                                 v
                    +--------------------+
                    |   ORCHESTRATOR     |  <- classifies intent, routes,
                    |   (LangGraph)      |     holds conversation memory
@@ -79,16 +82,56 @@ LangGraph multi-agent orchestration · Gemini tool-calling (with Groq fallback)
 4. `python -m src.backend.seed` — creates and seeds the SQLite database.
 5. `streamlit run app.py`
 
+## Run the API (FastAPI)
+
+```
+uvicorn api:app --reload
+```
+
+Then open interactive docs at http://localhost:8000/docs. Example flow:
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "where is order 1001?"}'
+
+# reuse the returned session_id to keep conversation memory across turns
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "refund it, it arrived broken", "session_id": "<id from above>"}'
+```
+
+Every request is logged as structured JSON (method, path, status, latency).
+The Streamlit UI and the API both call the same `src/orchestrator.py`, so the
+agent logic is written once and consumed by either a human (UI) or a machine
+(API) — exactly like the Resume Analyser project.
+
 ## Tests
 
 ```
 pytest
 ```
 
-30 tests covering: every tool against a seeded in-memory database (including
+35 tests covering: every tool against a seeded in-memory database (including
 the refund-eligibility guardrail), orchestrator routing for all five paths
-(mocked LLM, no API key needed), conversation memory, and retry/escalation
-behavior on a forced failure.
+(mocked LLM, no API key needed), conversation memory, retry/escalation
+behavior on a forced failure, and the FastAPI endpoints (session handling,
+validation, mocked orchestrator).
+
+## Evaluation
+
+A routing evaluation harness measures whether the router LLM classifies
+realistic (and deliberately tricky) customer messages correctly — this is
+different from the unit tests, which only check the graph wiring with a
+mocked LLM:
+
+```
+python eval/run_eval.py --dry-run   # validates the dataset, no API calls
+python eval/run_eval.py             # calls the real LLM, reports accuracy
+```
+
+On the bundled 21-scenario dataset (`eval/eval_dataset.json`) this currently
+scores 100% routing accuracy.
 
 ## Docker
 

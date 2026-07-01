@@ -1,0 +1,23 @@
+[
+  {"message": "Where is my order 1005?", "expected_route": "ORDER"},
+  {"message": "Can you tell me the delivery status of order 1010?", "expected_route": "ORDER"},
+  {"message": "I haven't received my package yet, order number 1003", "expected_route": "ORDER"},
+  {"message": "What's in my order 1007? Can you list the item and date?", "expected_route": "ORDER"},
+  {"message": "I'd like to return order 1001 and get my money back", "expected_route": "REFUND"},
+  {"message": "Is order 1009 eligible for a refund?", "expected_route": "REFUND"},
+  {"message": "This item was broken, I want a refund for order 1006", "expected_route": "REFUND"},
+  {"message": "Can you cancel and refund order 1004?", "expected_route": "REFUND"},
+  {"message": "My payment for order 1008 hasn't gone through yet", "expected_route": "PAYMENT"},
+  {"message": "I want to pay for order 1003 using PayPal", "expected_route": "PAYMENT"},
+  {"message": "Did my card get charged for order 1002?", "expected_route": "PAYMENT"},
+  {"message": "Please process the payment for order 1008", "expected_route": "PAYMENT"},
+  {"message": "What is your shipping policy?", "expected_route": "FAQ"},
+  {"message": "How long do returns take once you receive the item?", "expected_route": "FAQ"},
+  {"message": "Do you ship internationally?", "expected_route": "FAQ"},
+  {"message": "What's your customer support email?", "expected_route": "FAQ"},
+  {"message": "asdkjhasd nonsense gibberish qqweqwe", "expected_route": "ESCALATE"},
+  {"message": "This is the worst service ever, I'm furious and demand answers!!!", "expected_route": "ESCALATE"},
+  {"message": "Can I speak to a manager right now, this is unacceptable", "expected_route": "ESCALATE"},
+  {"message": "I paid but never got my order, where is it?", "expected_route": "ORDER"},
+  {"message": "Can I get a refund since my payment was charged twice for order 1001?", "expected_route": "REFUND"}
+]

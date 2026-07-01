@@ -7,4 +7,7 @@ langchain-groq
 sqlalchemy
 python-dotenv
 pydantic
+fastapi
+uvicorn[standard]
+httpx
 pytest
