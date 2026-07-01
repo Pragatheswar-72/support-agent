@@ -28,6 +28,14 @@ returns `"eligible": false` for a shipped (not delivered) order, so
 `initiate_refund` never even attempts the refund — the rule is enforced in
 the tool's code, not just requested in a prompt.
 
+| FastAPI interactive docs (`/docs`) | Real `/chat` request + response |
+|:---:|:---:|
+| ![API docs](demo/04_api_docs_endpoint.png) | ![API response](demo/04b_api_docs_response.png) |
+
+Same orchestrator, different front door: this is the identical order-lookup
+request from the screenshot above, but made directly against the REST API
+instead of the chat UI — same reply, same tool trace, same backend.
+
 ## What it does
 
 - Understands natural-language support requests
